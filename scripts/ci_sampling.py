@@ -1,20 +1,23 @@
 """
-sample_size_exact_binomial does sampling with replacement. This is suitable for large datasets
-of 10k samples or larger. In contrast, if the dataset had 1k samples or less, we should use the
-hypergeometric estimation, which can be used also over the simulator:
-https://sample-size.net/sample-size-conf-interval-proportion/
+Assumptions: 1. a sample is acceptable or unacceptable (has an error). 2. Samples must be
+independent of each other.
 
-with replacement
-n_binomial = sample_size_exact_binomial(p0, alpha, ci_half_width)
 
-without replacement
-n_hyper = sample_size_exact_hypergeometric(110000, p0, alpha, ci_half_width)
+sample_size_exact_binomial: for large enough datasets (e.g. >1k samples)
+
+sample_size_exact_hypergeometric: sampling without replacement for small datasets <1k samples.
+Limitation: quality should not be too close to 0 or 1. Also use the online simulator:
+https://sample-size.net/sample-size-conf-interval-proportion/.
 """
 
-from sampleplan.confidence_interval import sample_size_exact_binomial
+from sampleplan.confidence_interval import sample_size_exact_binomial, \
+    sample_size_exact_hypergeometric
 
 n_binomial = sample_size_exact_binomial(p0=0.12, alpha=0.05, ci_half_width=0.05)
 print(n_binomial)
 
-n_binomial = sample_size_exact_binomial(p0=0.4, alpha=0.05, ci_half_width=0.05)
-print(n_binomial)
+n_hypergeometric = sample_size_exact_hypergeometric(lot_size=800,
+                                                    p0=0.12,
+                                                    alpha=0.05,
+                                                    ci_half_width=0.05)
+print(n_hypergeometric)
